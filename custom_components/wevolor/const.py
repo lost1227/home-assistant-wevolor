@@ -2,6 +2,7 @@
 
 DOMAIN = "wevolor"
 CONFIG_HOST = "host"
+CONFIG_UID = "uid"
 CONFIG_NAME = "name"
 CONFIG_CHANNELS = "channel_count"
 CONFIG_CHANNEL_1 = "channel_1"

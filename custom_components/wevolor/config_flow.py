@@ -12,7 +12,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 
-from .const import CONFIG_CHANNELS, CONFIG_HOST, CONFIG_TILT, DOMAIN, CONFIG_CHANNEL_1, CONFIG_CHANNEL_2, CONFIG_CHANNEL_3, CONFIG_CHANNEL_4, CONFIG_CHANNEL_5, CONFIG_CHANNEL_6, CONFIG_NAME
+from .const import CONFIG_CHANNELS, CONFIG_HOST, CONFIG_UID, CONFIG_TILT, DOMAIN, CONFIG_CHANNEL_1, CONFIG_CHANNEL_2, CONFIG_CHANNEL_3, CONFIG_CHANNEL_4, CONFIG_CHANNEL_5, CONFIG_CHANNEL_6, CONFIG_CHANNEL_, CONFIG_NAME
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -40,7 +40,20 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     if not status:
         raise CannotConnect
 
-    return status
+    config_data = data.copy()
+    channel_id = 0
+    for i in range(0, 6):
+        if data[CONFIG_CHANNEL_ + str(i+1)]:
+            channel_id |= (1 << i)
+
+    config_data[CONFIG_UID] = status["uid"] + "-" + str(channel_id)
+
+
+    title = status["remote"]
+    if not title:
+        title = "Wevolor-" + config_data[CONFIG_UID]
+
+    return (title, config_data)
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -60,14 +73,14 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         try:
-            info = await validate_input(self.hass, user_input)
+            title, config_data = await validate_input(self.hass, user_input)
         except CannotConnect:
             errors["base"] = "cannot_connect"
         except Exception as err:  # pylint: disable=broad-except
             _LOGGER.exception("Unexpected exception: %s", err)
             errors["base"] = "unknown"
         else:
-            return self.async_create_entry(title=info["remote"], data=user_input)
+            return self.async_create_entry(title=title, data=config_data)
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors

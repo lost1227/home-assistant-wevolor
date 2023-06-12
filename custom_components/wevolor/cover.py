@@ -15,7 +15,7 @@ from homeassistant.components.cover import (
     CoverEntity,
 )
 
-from .const import CONFIG_CHANNELS, CONFIG_TILT, DOMAIN,  CONFIG_CHANNEL_, CONFIG_NAME
+from .const import CONFIG_CHANNELS, CONFIG_UID, CONFIG_TILT, DOMAIN,  CONFIG_CHANNEL_, CONFIG_NAME
 
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
@@ -25,7 +25,9 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     channels = [i for i in range(1, 6) if config_entry.data[f'{CONFIG_CHANNEL_}{i}']]
 
     entities = [
-        WevolorShade(wevolor, channels,
+        WevolorShade(wevolor,
+                     config_entry.data[CONFIG_UID],
+                     channels,
                      config_entry.data[CONFIG_NAME],
                      config_entry.data[CONFIG_TILT],
                      )
@@ -40,8 +42,9 @@ class WevolorShade(CoverEntity):
     _channels: list[int]
     _wevolor: Wevolor
 
-    def __init__(self, wevolor: Wevolor, channels: list[int], name: str, support_tilt: bool = False):
+    def __init__(self, wevolor: Wevolor, uid: str, channels: list[int], name: str, support_tilt: bool = False):
         """Create this wevolor shade cover entity."""
+        self._attr_unique_id = f"{uid}-cov"
         self._wevolor = wevolor
         self._channels = channels
         self._attr_name = f"Wevolor {name}"

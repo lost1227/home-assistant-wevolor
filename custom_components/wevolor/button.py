@@ -6,7 +6,7 @@ from pywevolor import Wevolor
 
 from homeassistant.components.button import ButtonEntity
 
-from .const import  DOMAIN, CONFIG_CHANNEL_, CONFIG_NAME
+from .const import  DOMAIN, CONFIG_UID, CONFIG_CHANNEL_, CONFIG_NAME
 
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
@@ -17,8 +17,11 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     channels = [i for i in range(1, 6) if config_entry.data[f'{CONFIG_CHANNEL_}{i}']]
 
     entities = [
-        WevolorFavoriteButton(wevolor, channels,            config_entry.data[CONFIG_NAME],
-)
+        WevolorFavoriteButton(wevolor,
+                              config_entry.data[CONFIG_UID],
+                              channels,
+                              config_entry.data[CONFIG_NAME],
+                              )
     ]
     async_add_entities(entities, True)
 
@@ -29,8 +32,9 @@ class WevolorFavoriteButton(ButtonEntity):
     _channels: list[int]
     _wevolor: Wevolor
 
-    def __init__(self, wevolor: Wevolor, channels: list[int], name: str):
+    def __init__(self, wevolor: Wevolor, uid: str, channels: list[int], name: str):
         """Set up wevolor and channel properties."""
+        self._attr_unique_id = f"{uid}-fav"
         self._wevolor = wevolor
         self._channels = channels
         self._attr_name = f"Wevolor {name} to Favorite Position"
