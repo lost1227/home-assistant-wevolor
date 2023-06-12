@@ -45,6 +45,11 @@ class WevolorShade(CoverEntity):
     def __init__(self, wevolor: Wevolor, uid: str, channels: list[int], name: str, support_tilt: bool = False):
         """Create this wevolor shade cover entity."""
         self._attr_unique_id = f"{uid}-cov"
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, uid)},
+            "name": f"Wevolor {name}",
+            "manufacturer": "Wevolor"
+        }
         self._wevolor = wevolor
         self._channels = channels
         self._attr_name = f"Wevolor {name}"

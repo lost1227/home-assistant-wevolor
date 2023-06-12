@@ -35,6 +35,11 @@ class WevolorFavoriteButton(ButtonEntity):
     def __init__(self, wevolor: Wevolor, uid: str, channels: list[int], name: str):
         """Set up wevolor and channel properties."""
         self._attr_unique_id = f"{uid}-fav"
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, uid)},
+            "name": f"Wevolor {name}",
+            "manufacturer": "Wevolor"
+        }
         self._wevolor = wevolor
         self._channels = channels
         self._attr_name = f"Wevolor {name} to Favorite Position"
