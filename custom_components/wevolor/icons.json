@@ -1,0 +1,9 @@
+{
+    "entity": {
+        "button": {
+            "favorite_button": {
+                "default": "mdi:heart"
+            }
+        }
+    }
+}

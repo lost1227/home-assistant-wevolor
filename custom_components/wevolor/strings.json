@@ -1,23 +1,49 @@
 {
   "config": {
     "step": {
-      "user": {
+      "config_bridge": {
         "data": {
-          "host": "IP address of Wevolor device on local network",
-          "support_tilt": "Do the devices controlled by this Wevolor support tilting?",
-          "name": "Name for this Wevolor group",
-          "channel_1": "Include channel #1 in this group?",
-          "channel_2": "Include channel #2 in this group?",
-          "channel_3": "Include channel #3 in this group?",
-          "channel_4": "Include channel #4 in this group?",
-          "channel_5": "Include channel #5 in this group?",
-          "channel_6": "Include channel #6 in this group?"
+          "host": "IP address",
+          "channels": "Channels"
+        },
+        "data_description": {
+          "host": "IP address of the Wevolor device",
+          "channels": "Which channels to set up"
+        }
+      },
+      "config_channel": {
+        "data": {
+          "channel_name": "Channel Name",
+          "support_tilt": "Channel {channel} supports tilt?",
+          "use_favorite_for_down": "Use favorite setting for down position?"
+        },
+        "data_description": {
+          "channel_name": "Name for Channel {channel}"
         }
       }
-    },
-    "error": {
-      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
-      "unknown": "[%key:common::config_flow::error::unknown%]"
     }
+  },
+  "selector": {
+    "channels":{
+      "options": {
+        "channel_1": "Channel 1",
+        "channel_2": "Channel 2",
+        "channel_3": "Channel 3",
+        "channel_4": "Channel 4",
+        "channel_5": "Channel 5",
+        "channel_6": "Channel 6"
+      }
+    }
+  },
+  "entity": {
+    "button": {
+      "favorite_button": {
+        "name": "Wevolor {name} to Favorite Position"
+      }
+    }
+  },
+  "error": {
+    "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+    "unknown": "[%key:common::config_flow::error::unknown%]"
   }
 }
